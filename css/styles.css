@@ -15,9 +15,9 @@
   --white: #FFFFFF;
 
   /* Derivados de la paleta (transparencias y sombras del cromo) */
-  --chrome-shadow: #4d4d55;
+  --chrome-shadow: #4d4d4d;
   --chrome-soft: rgba(192, 192, 192, 0.72);
-  --chrome-dim: rgba(192, 192, 192, 0.5);
+  --chrome-dim: rgba(192, 192, 192, 0.66);
   --line: rgba(192, 192, 192, 0.16);
   --neon-glow: rgba(255, 0, 60, 0.45);
   --fuchsia-glow: rgba(255, 0, 110, 0.35);
@@ -28,7 +28,7 @@
       var(--chrome-shadow) 50%,
       #ececec 58%,
       var(--chrome) 78%,
-      #8c8c94 100%);
+      #8c8c8c 100%);
 
   /* Tipografía */
   --font-display: "Big Shoulders Display", "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
@@ -375,8 +375,8 @@ body::after {
   background-repeat: no-repeat;
   mix-blend-mode: screen;
   opacity: 0.7;
-  -webkit-mask: url("../assets/logo-perreo-room.png") center / contain no-repeat;
-  mask: url("../assets/logo-perreo-room.png") center / contain no-repeat;
+  -webkit-mask: url("../assets/logo-perreo-room.webp") center / contain no-repeat;
+  mask: url("../assets/logo-perreo-room.webp") center / contain no-repeat;
   animation: chrome-sheen 5.5s var(--ease-out) infinite;
 }
 
@@ -803,8 +803,8 @@ body::after {
   width: 100%;
   max-width: 26rem;
   height: auto;
-  aspect-ratio: 5 / 1;
-  object-fit: cover;
+  aspect-ratio: 16 / 7;
+  object-fit: contain;
   filter: drop-shadow(0 0 14px rgba(255, 0, 60, 0.35));
 }
 
