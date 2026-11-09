@@ -8,7 +8,7 @@
 .mk-grid { display: grid; gap: clamp(1.5rem, 4vw, 3rem); grid-template-columns: 1fr; padding-bottom: clamp(3rem, 8vw, 6rem); }
 .mk-posters { display: grid; gap: 1.5rem; justify-self: center; width: min(100%, 26rem); }
 .mk-poster { margin: 0; width: 100%; }
-.mk-poster img { display: block; width: 100%; height: auto; border-radius: 1rem; border: 1px solid var(--line); box-shadow: 0 0 60px var(--neon-glow); }
+.mk-poster img, .mk-poster video { display: block; width: 100%; height: auto; border-radius: 1rem; border: 1px solid var(--line); box-shadow: 0 0 60px var(--neon-glow); }
 .mk-poster figcaption { margin-top: 0.6rem; text-align: center; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--chrome-dim); }
 .mk-texts { display: grid; gap: 1.25rem; align-content: start; min-width: 0; }
 .mk-card { border: 1px solid var(--line); border-radius: 0.75rem; padding: 1.25rem; background: rgba(255, 255, 255, 0.02); min-width: 0; }
