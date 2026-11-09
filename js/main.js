@@ -1,5 +1,6 @@
 // Arranque: cuenta atrás, revelado por scroll y efectos (respetando reduced-motion).
 import { getRemaining } from './countdown.js';
+import { createFlashLimiter } from './lightning.js';
 import { startLightning, startChains } from './fx.js';
 
 const root = document.documentElement;
@@ -62,6 +63,9 @@ const motionQuery = typeof window.matchMedia === 'function'
   ? window.matchMedia('(prefers-reduced-motion: reduce)')
   : null;
 
+// Un único limitador de destellos (máx. 3/s) para toda la vida de la página.
+const flashLimiter = createFlashLimiter(3);
+
 let lightning = null;
 let chains = null;
 
@@ -75,6 +79,7 @@ function applyMotion() {
   chains = startChains(chainSvgs, { animate: !reduce });
   if (!reduce && canvas) {
     lightning = startLightning(canvas, trigger, {
+      limiter: flashLimiter,
       onStrike: (info) => { if (chains && chains.impulse) chains.impulse(info); },
     });
   }

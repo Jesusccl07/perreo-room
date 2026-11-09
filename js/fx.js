@@ -12,6 +12,7 @@ const MAX_DT = 0.05;
 const now = () => (typeof performance !== 'undefined' && Number.isFinite(performance.now()) ? performance.now() : Date.now());
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 const noop = () => {};
+const sharedLimiter = createFlashLimiter(3);
 
 function observeVisibility(el, cb) {
   if (!el || typeof IntersectionObserver === 'undefined') {
@@ -68,7 +69,9 @@ export function startLightning(canvas, trigger, opts = {}) {
   if (!ctx) return { stop: noop };
 
   const onStrike = typeof opts.onStrike === 'function' ? opts.onStrike : noop;
-  const limiter = createFlashLimiter(3);
+  // Limitador compartido por todos los arranques (p. ej. al alternar reduced-motion),
+  // para que nunca haya más de 3 destellos en 1 s aunque se reinicie el efecto.
+  const limiter = opts.limiter && typeof opts.limiter.tryFlash === 'function' ? opts.limiter : sharedLimiter;
   const area = canvas.parentElement || canvas;
 
   let w = 0;
@@ -473,7 +476,8 @@ export function startChains(svgs, opts = {}) {
   }
 
   function kick() {
-    if (!stopped && !raf && !document.hidden) {
+    // En modo estático (reduced motion) nunca hay bucle de animación.
+    if (animate && !stopped && !raf && !document.hidden) {
       last = 0;
       raf = requestAnimationFrame(frame);
     }
@@ -481,12 +485,15 @@ export function startChains(svgs, opts = {}) {
 
   function frame(ts) {
     raf = 0;
-    if (stopped || document.hidden) return;
+    if (!animate || stopped || document.hidden) return;
     const t = Number.isFinite(ts) ? ts : now();
     const dt = last ? clamp((t - last) / 1000, 0, MAX_DT) : 1 / 60;
     last = t;
     let moving = false;
 
+    // Primero todas las lecturas de layout, luego todas las escrituras.
+    const active = dividers.filter((d) => visibleDividers.has(d.svg));
+    const targets = active.map((d) => dividerTarget(d.svg));
     const sy = window.scrollY || 0;
     const dy = clamp(sy - lastScroll, -60, 60);
     lastScroll = sy;
@@ -508,9 +515,9 @@ export function startChains(svgs, opts = {}) {
       }
     }
 
-    for (const d of dividers) {
-      if (!visibleDividers.has(d.svg)) continue;
-      const target = dividerTarget(d.svg);
+    for (let i = 0; i < active.length; i++) {
+      const d = active[i];
+      const target = targets[i];
       // Muelle subamortiguado hacia la tensión objetivo: pequeño rebote al frenar.
       d.state.angle = d.tension - target;
       d.state = stepPendulum(d.state, dt, { gravity: 9.81, length: 0.15, damping: 9 });
