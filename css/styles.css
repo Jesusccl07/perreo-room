@@ -803,9 +803,10 @@ body::after {
 
 .face-slot {
   position: relative;
+  isolation: isolate;
   width: 100%;
   max-width: 22rem;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   border: 1px solid var(--line);
   background:
@@ -815,11 +816,94 @@ body::after {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.face-slot > video,
-.face-slot > img {
+.founder__photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Capas de luz sobre la foto (no tocan la cara: el centro queda limpio). */
+.face-slot::before,
+.face-slot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Viñeta y fundido inferior hacia el negro de la página. */
+.face-slot::after {
+  z-index: 2;
+  background:
+    linear-gradient(to top, var(--bg) 0%, rgba(2, 1, 4, 0.6) 14%, transparent 34%),
+    radial-gradient(85% 70% at 50% 34%, transparent 55%, rgba(2, 1, 4, 0.7) 100%);
+}
+
+/* CLEMENT: el fondo gris del estudio se funde en negro con luz roja y fucsia. */
+.face-slot--clement .founder__photo {
+  object-position: 50% 0%;
+  filter: saturate(0.8) contrast(1.06) brightness(0.94);
+  -webkit-mask-image: radial-gradient(115% 90% at 50% 30%, #000 50%, transparent 92%);
+  mask-image: radial-gradient(115% 90% at 50% 30%, #000 50%, transparent 92%);
+}
+
+.face-slot--clement::before {
+  z-index: 1;
+  mix-blend-mode: multiply;
+  background:
+    radial-gradient(58% 42% at 50% 30%, #FFFFFF 40%, transparent 100%),
+    linear-gradient(100deg, #B80025 0%, #480078 50%, #FF006E 100%);
+}
+
+/* SOANEZ: recorte sobre un halo rojo / fucsia. */
+.face-slot--soanez {
+  background:
+    radial-gradient(42% 30% at 50% 30%, rgba(255, 0, 60, 0.55), transparent 72%),
+    radial-gradient(70% 48% at 50% 52%, rgba(255, 0, 110, 0.32), transparent 75%),
+    radial-gradient(90% 50% at 50% 115%, rgba(184, 0, 37, 0.5), transparent 70%),
+    radial-gradient(60% 40% at 15% 10%, rgba(72, 0, 120, 0.5), transparent 70%),
+    var(--bg);
+}
+
+.face-slot--soanez .founder__photo {
+  object-position: 50% 0%;
+  filter: drop-shadow(0 0 16px rgba(255, 0, 60, 0.35));
+}
+
+/* Insignia con la cara 3D animada (póster si no hay vídeo). */
+.face-badge {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 3;
+  width: clamp(4.75rem, 27%, 6.5rem);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--chrome-soft);
+  background:
+    radial-gradient(65% 65% at 50% 40%, rgba(72, 0, 120, 0.85), transparent 75%),
+    var(--bg);
+  box-shadow:
+    0 0 0 3px rgba(2, 1, 4, 0.85),
+    0 0 18px rgba(255, 0, 60, 0.45);
+}
+
+.face-badge__clip {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.2s linear;
+}
+
+.face-badge__clip.is-on {
+  opacity: 1;
 }
 
 .founder__logo {

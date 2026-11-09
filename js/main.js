@@ -2,6 +2,7 @@
 import { getRemaining } from './countdown.js';
 import { createFlashLimiter } from './lightning.js';
 import { startLightning, startChains } from './fx.js';
+import { startFaces } from './faces.js';
 
 const root = document.documentElement;
 root.classList.add('reveal-ready');
@@ -66,17 +67,23 @@ const motionQuery = typeof window.matchMedia === 'function'
 // Un único limitador de destellos (máx. 3/s) para toda la vida de la página.
 const flashLimiter = createFlashLimiter(3);
 
+const faceBadges = document.querySelectorAll('.face-badge');
+
 let lightning = null;
 let chains = null;
+let faces = null;
 
 function applyMotion() {
   if (lightning) lightning.stop();
   if (chains) chains.stop();
+  if (faces) faces.stop();
   lightning = null;
   chains = null;
+  faces = null;
   const reduce = !!(motionQuery && motionQuery.matches);
-  // Con movimiento reducido: cadenas estáticas, sin rayos ni destellos.
+  // Con movimiento reducido: cadenas estáticas, sin rayos ni destellos y caras solo en póster.
   chains = startChains(chainSvgs, { animate: !reduce });
+  faces = startFaces(faceBadges, { animate: !reduce });
   if (!reduce && canvas) {
     lightning = startLightning(canvas, trigger, {
       limiter: flashLimiter,
