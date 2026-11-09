@@ -429,6 +429,29 @@ body::after {
   background: linear-gradient(90deg, transparent 0%, rgba(192, 192, 192, 0.35) 30%, rgba(255, 0, 60, 0.6) 50%, rgba(192, 192, 192, 0.35) 70%, transparent 100%) center / 100% 1px no-repeat;
 }
 
+/* Con eslabones (js/fx.js): los extremos se funden con el fondo */
+.chain-divider:not(:empty) {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+}
+
+.hero__chain:not(:empty) {
+  filter: drop-shadow(0 10px 14px rgba(2, 1, 4, 0.85));
+}
+
+/* Destello de pantalla de cada rayo (opacidad animada desde js/fx.js, máx. 3/s) */
+.bolt-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(60% 50% at var(--fx, 50%) 0%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 0, 110, 0.12) 38%, transparent 75%),
+    rgba(255, 0, 60, 0.05);
+}
+
 /* =========================================================
    Secciones
    ========================================================= */
